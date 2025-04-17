@@ -13,12 +13,12 @@
 
 void MCP23S17_StartTranmission(SPIConfiguration_t *spi)
 {
-   spi->cs_clear();
+   spi->cs.clear();
 }
  
 void MCP23S17_EndTranmission(SPIConfiguration_t *spi)
 {
-   spi->cs_set();
+   spi->cs.set();
 }
 
 /* ==== Fonctions de configuration ==== */
