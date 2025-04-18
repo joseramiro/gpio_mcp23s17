@@ -8,6 +8,7 @@
 
 #include "plib_mcp23s17_spi.h"
 #include "plib_mcp23s17.h"
+#include "libs/common_c_libs/plib_data_struct.h"
 
 /* ==== Fonctions SPI ==== */
 

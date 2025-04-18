@@ -10,7 +10,7 @@
  * @copyright Copyright (c) 2025
  */
 
-#include "libs/util/plibs_utils.h"  // used for SPI struct
+#include "libs/common_c_libs/plib_comm_struct.h"
 
 /** @brief Adresse SPI du MCP23S17 */
 #define MCP23S17_ADDRESS        0x40 /**< Adresse de base */

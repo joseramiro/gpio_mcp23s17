@@ -9,7 +9,7 @@
  * @date 2025-03-18
  */
 
-#include "libs/util/plibs_utils.h"  // used for SPI struct
+#include "libs/common_c_libs/plib_comm_struct.h"
 
 #define MCP23S17_NUM_PINS               16      /**< Nombre total de broches du MCP23S17 */
 #define MCP23S17_NUM_PINS_IN_PORT       8       /**< Nombre de broches par port (A ou B) */
