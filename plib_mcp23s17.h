@@ -11,80 +11,226 @@
 
 #include "libs/common_c_libs/plib_comm_struct.h"
 
-#define MCP23S17_NUM_PINS               16      /**< Nombre total de broches du MCP23S17 */
-#define MCP23S17_NUM_PINS_IN_PORT       8       /**< Nombre de broches par port (A ou B) */
-#define MCP23S17_INPUT_CONF_MASK        0xFF    /**< Masque de configuration pour pins d'entrée */
-#define MCP23S17_OUTPUT_CONF_MASK       0x00    /**< Masque de configuration pour pins d'entrée */
+/** @brief Nombre total de broches du MCP23S17 */
+#define MCP23S17_NUM_PINS           16
 
-/** @defgroup MCP23S17_Registers Registres du MCP23S17
- *  @{
- */
-#define MCP23S17_REG_IODIR_A        0x00 /**< Contrôle la direction des E/S du port A */
-#define MCP23S17_REG_IODIR_B        0x01 /**< Contrôle la direction des E/S du port B */
-#define MCP23S17_REG_IPOL_A         0x02 /**< Configure la polarité des entrées du port A */
-#define MCP23S17_REG_IPOL_B         0x03 /**< Configure la polarité des entrées du port B */
-#define MCP23S17_REG_GPINTEN_A      0x04 /**< Active les interruptions sur changement pour le port A */
-#define MCP23S17_REG_GPINTEN_B      0x05 /**< Active les interruptions sur changement pour le port B */
-#define MCP23S17_REG_DEFVAL_A       0x06 /**< Définit les valeurs de référence pour les interruptions du port A */
-#define MCP23S17_REG_DEFVAL_B       0x07 /**< Définit les valeurs de référence pour les interruptions du port B */
-#define MCP23S17_REG_INTCON_A       0x08 /**< Configure la comparaison des valeurs d'interruption du port A */
-#define MCP23S17_REG_INTCON_B       0x09 /**< Configure la comparaison des valeurs d'interruption du port B */
-#define MCP23S17_REG_IOCON_A        0x0A /**< Configuration générale du module */
-#define MCP23S17_REG_IOCON_B        0x0B /**< Deuxième registre de configuration générale */
-#define MCP23S17_REG_GPPU_A         0x0C /**< Active les résistances de pull-up pour le port A */
-#define MCP23S17_REG_GPPU_B         0x0D /**< Active les résistances de pull-up pour le port B */
-#define MCP23S17_REG_INTF_A         0x0E /**< Indique les interruptions actives sur le port A */
-#define MCP23S17_REG_INTF_B         0x0F /**< Indique les interruptions actives sur le port B */
-#define MCP23S17_REG_INTCAP_A       0x10 /**< Capture l'état du port A lors d'une interruption */
-#define MCP23S17_REG_INTCAP_B       0x11 /**< Capture l'état du port B lors d'une interruption */
-#define MCP23S17_REG_GPIO_A         0x12 /**< Accède aux broches du port A */
-#define MCP23S17_REG_GPIO_B         0x13 /**< Accède aux broches du port B */
-#define MCP23S17_REG_OLAT_A         0x14 /**< Verrouillage de sortie pour le port A */
-#define MCP23S17_REG_OLAT_B         0x15 /**< Verrouillage de sortie pour le port B */
+/** @defgroup MCP23S17_IODirMask
+ *  @brief Masques pour registre IODIR du MCP23S17
+ * @{ */
+/** @brief Masque de configuration pour pins d'entrée */
+#define MCP23S17_IODIR_INPUT        0xFF
+/** @brief Masque de configuration pour pins d'sortie */
+#define MCP23S17_IODIR_OUTPUT       0x00
 /** @} */
 
-/** @defgroup MCP23S17_ConfigBits Bits de configuration du registre IOCR
- *  @{
- */
-#define MCP23S17_IOCR_BANK      0x80 /**< Mode de gestion des registres (banques ou séquentiel) */
-#define MCP23S17_IOCR_MIRROR    0x40 /**< Relie les broches INT en interne */
-#define MCP23S17_IOCR_SEQOP     0x20 /**< Mode d'opération séquentielle */
-#define MCP23S17_IOCR_DISSLW    0x10 /**< Désactive la réduction de vitesse sur SDA */
-#define MCP23S17_IOCR_HAEN      0x08 /**< Active les broches d'adresse matérielle */
-#define MCP23S17_IOCR_ODR       0x04 /**< Configure la sortie INT en drain ouvert */
-#define MCP23S17_IOCR_INTPOL    0x02 /**< Détermine la polarité des interruptions */
+/** @defgroup MCP23S17_Registers Registres du MCP23S17
+ *  @brief Liste de registres du MCP23S17
+ *  @{ */
+/** @brief Contrôle la direction des E/S du port A  */
+#define MCP23S17_REG_IODIR_A        0x00
+/** @brief Contrôle la direction des E/S du port B */
+#define MCP23S17_REG_IODIR_B        0x01
+/** @brief Configure la polarité des entrées du port A */
+#define MCP23S17_REG_IPOL_A         0x02
+/** @brief Configure la polarité des entrées du port B */
+#define MCP23S17_REG_IPOL_B         0x03
+/** @brief Active les interruptions sur changement pour le port A */
+#define MCP23S17_REG_GPINTEN_A      0x04
+/** @brief Active les interruptions sur changement pour le port Be */
+#define MCP23S17_REG_GPINTEN_B      0x05
+/** @brief Définit les valeurs de référence pour les interruptions du port A */
+#define MCP23S17_REG_DEFVAL_A       0x06
+/** @brief Définit les valeurs de référence pour les interruptions du port B */
+#define MCP23S17_REG_DEFVAL_B       0x07
+/** @brief Configure la comparaison des valeurs d'interruption du port A */
+#define MCP23S17_REG_INTCON_A       0x08
+/** @brief Configure la comparaison des valeurs d'interruption du port B */
+#define MCP23S17_REG_INTCON_B       0x09
+/** @brief Configuration générale du module */
+#define MCP23S17_REG_IOCON_A        0x0A
+/** @brief Deuxième registre de configuration générale */
+#define MCP23S17_REG_IOCON_B        0x0B
+/** @brief Active les résistances de pull-up pour le port A */
+#define MCP23S17_REG_GPPU_A         0x0C
+/** @brief Active les résistances de pull-up pour le port B */
+#define MCP23S17_REG_GPPU_B         0x0D
+/** @brief Indique les interruptions actives sur le port A */
+#define MCP23S17_REG_INTF_A         0x0E
+/** @brief Indique les interruptions actives sur le port B */
+#define MCP23S17_REG_INTF_B         0x0F
+/** @brief Capture l'état du port A lors d'une interruption */
+#define MCP23S17_REG_INTCAP_A       0x10
+/** @brief Capture l'état du port B lors d'une interruption */
+#define MCP23S17_REG_INTCAP_B       0x11
+/** @brief Accède aux broches du port A  */
+#define MCP23S17_REG_GPIO_A         0x12
+/** @brief Accède aux broches du port B */
+#define MCP23S17_REG_GPIO_B         0x13
+/** @brief Verrouillage de sortie pour le port A */
+#define MCP23S17_REG_OLAT_A         0x14
+/** @brief Verrouillage de sortie pour le port B */
+#define MCP23S17_REG_OLAT_B         0x1
 /** @} */
 
 /** 
+ * @enum MCP23S17IODIR_t
  * @brief Modes de direction des broches 
  */
 typedef enum
 {
-    MCP23S17_DIRECTION_OUT,  /**< Mode sortie */
-    MCP23S17_DIRECTION_IN    /**< Mode entrée */
-}MCP23S17Directions_t;
+    MCP23S17_IODIR_OUT,  /**< Mode sortie */
+    MCP23S17_IODIR_IN    /**< Mode entrée */
+}MCP23S17IODIR_t;
 
-/** 
- * @brief Modes de gestion des interruptions 
+/**
+ * @enum MCP23S17IOCONBank_t
+ * @brief Mode de regroupement des registres (BANK).
  */
 typedef enum 
 {
-    MCP23S17_MIRROR_OFF,     /**< Interruptions distinctes sur INTA et INTB */
-    MCP23S17_MIRROR_ON       /**< Interruptions combinées sur INTA et INTB */
-}MCP23S17Mirror_t;
+    MCP23S17_IOCON_BANK_SAME,       /**< Registres groupés (mode par défaut). */
+    MCP23S17_IOCON_BANK_SEPARATED   /**< Registres séparés par port. */
+} MCP23S17IOCONBank_t;
+
+/**
+ * @enum MCP23S17IOCONMirror_t
+ * @brief Contrôle du mode miroir des interruptions (MIRROR).
+ */
+typedef enum 
+{
+    MCP23S17_IOCON_MIRROR_DISABLED, /**< Interruptions gérées séparément. */
+    MCP23S17_IOCON_MIRROR_ENABLED   /**< Interruptions groupées. */
+} MCP23S17IOCONMirror_t;
+
+/**
+ * @enum MCP23S17IOCONSeqop_t
+ * @brief Contrôle du mode d'adressage séquentiel (SEQOP).
+ */
+typedef enum 
+{
+    MCP23S17_IOCON_SEQOP_ENABLED,   /**< Adressage séquentiel actif. */
+    MCP23S17_IOCON_SEQOP_DISABLED   /**< Adressage séquentiel désactivé. */
+} MCP23S17IOCONSeqop_t;
+
+/**
+ * @enum MCP23S17IOCONDisslw_t
+ * @brief Contrôle du ralentissement de la sortie (DISSLW).
+ */
+typedef enum 
+{
+    MCP23S17_IOCON_SLW_DISABLED,    /**< Sortie rapide. */
+    MCP23S17_IOCON_SLW_ENABLED      /**< Sortie ralentie (anti-rebond). */
+} MCP23S17IOCONDisslw_t;
+
+/**
+ * @enum MCP23S17IOCONHaen_t
+ * @brief Activation de l'adresse matérielle (HAEN).
+ */
+typedef enum 
+{
+    MCP23S17_IOCON_HAEN_DISABLED,   /**< Adresse matérielle ignorée. */
+    MCP23S17_IOCON_HAEN_ENABLED     /**< Adresse matérielle activée. */
+} MCP23S17IOCONHaen_t;
+
+/**
+ * @enum MCP23S17IOCONOdr_t
+ * @brief Configuration de la sortie d'interruption (ODR).
+ */
+typedef enum 
+{
+    MCP23S17_IOCON_ODR_DISABLED,    /**< Mode push-pull. */
+    MCP23S17_IOCON_ODR_ENABLED      /**< Mode open-drain. */
+} MCP23S17IOCONOdr_t;
+
+/**
+ * @enum MCP23S7IOCONIntpol_t
+ * @brief Polarité des interruptions (INTPOL).
+ */
+typedef enum
+{
+    MCP23S17_IOCON_INTPOL_LOW,      /**< Active à l'état bas. */
+    MCP23S17_IOCON_INTPOL_HIGH      /**< Active à l'état haut. */
+} MCP23S7IOCONIntpol_t;
+
+/**
+ * @union MCP23S17IODirReg_t
+ * @brief Registre de direction des broches (IODIR) du MCP23S17
+ */
+typedef union
+{
+    /** @brief Accès individuel aux bits du registre. */
+    struct {
+        /** @brief Bit 0 */
+        unsigned char b0 : 1;
+        /** @brief Bit 1 */
+        unsigned char b1 : 1;
+        /** @brief Bit 2 */
+        unsigned char b2 : 1;
+        /** @brief Bit 3 */
+        unsigned char b3 : 1;
+        /** @brief Bit 4 */
+        unsigned char b4 : 1;
+        /** @brief Bit 5 */
+        unsigned char b5 : 1;
+        /** @brief Bit 6 */
+        unsigned char b6 : 1;
+        /** @brief Bit 7 */
+        unsigned char b7 : 1;
+    } bits;
+    /** @brief Accès complet au registre sous forme d'un octet. */
+    unsigned char reg; /**< Accès complet au registre sous forme d'un octet. */
+} MCP23S17IODirReg_t;
+
+/**
+ * @union MCP23S17IOCONReg_t
+ * @brief Registre de configuration des broches (IOCON) du MCP23S17
+ */
+typedef union
+{
+    /** @brief Accès individuel aux bits du registre. */
+    struct {
+        /** @brief Bit 0 (réservé)*/
+        unsigned char b0        : 1;
+        /** @brief Bit 1 polarité de sortie de la broche INT */
+        unsigned char intpol    : 1;
+        /** @brief Bit 2 configuration open-drain de la broche INT */
+        unsigned char odr       : 1;
+        /** @brief Bit 3 addresse hardware */
+        unsigned char haen      : 1;
+        /** @brief Bit 4 configuration de slew rate (SDA output) */ 
+        unsigned char disslw    : 1;
+        /** @brief Bit 5 configuration de mode séquentiel */
+        unsigned char seqop     : 1;
+        /** @brief Bit 6 broches INT interconnectées */
+        unsigned char mirror    : 1;
+        /** @brief Bit 7 Configuration des addresses des registres */
+        unsigned char bank      : 1;
+    } bits;
+    /** @brief Accès complet au registre sous forme d'un octet. */
+    unsigned char reg; /**< Accès complet au registre sous forme d'un octet. */
+} MCP23S17IOCONReg_t;
 
 /** 
+ * @struct MCP23S17_t
  * @brief Structure de configuration du MCP23S17 
  */
 typedef struct
 {
-    unsigned char id;           /**< Identifiant du module */
-    unsigned char modeA;        /**< Configuration de direction pour le port A */
-    unsigned char modeB;        /**< Configuration de direction pour le port B */
-    unsigned char mirror;       /**< Mode de gestion des interruptions */
-    unsigned int value;         /**< Valeur courante des ports */
-    SPIConfiguration_t spi;       /**< Configuration SPI associée */
-}MCP23S17Conf_t;
+    /** @brief Identifiant du module */
+    unsigned char id;
+    /** @brief Valeur des ports */
+    unsigned int value;
+    /** @brief Registre IODIR du port A */
+    MCP23S17IODirReg_t dirA;
+    /** @brief Registre IODIR du port B */
+    MCP23S17IODirReg_t dirB;
+    /** @brief Registre IOCON du port A */
+    MCP23S17IOCONReg_t confA;
+    /** @brief Registre IOCON du port B */
+    MCP23S17IOCONReg_t confB;
+    /** @brief Configuration de communication série */
+    SPI_t spi;
+}MCP23S17_t;
 
 /* ==== Fonctions Chip Select ==== */
 
@@ -92,63 +238,27 @@ typedef struct
  * @brief Démarre une transmission SPI avec le MCP23S17.
  * @param spi Pointeur vers la configuration SPI
  */
-void MCP23S17_StartTranmission(SPIConfiguration_t *spi);
+void MCP23S17_StartTranmission(SPI_t *spi);
 
 /**
  * @brief Termine une transmission SPI avec le MCP23S17.
  * @param spi Pointeur vers la configuration SPI
  */
-void MCP23S17_EndTranmission(SPIConfiguration_t *spi);
+void MCP23S17_EndTranmission(SPI_t *spi);
 
 /* ==== Fonctions de configuration ==== */
 
 /**
  * @brief Initialise le module MCP23S17 avec la configuration fournie.
- * @param conf Pointeur vers la configuration du module
+ * @param obj Pointeur vers la configuration du module
  */
-void MCP23S17_Init(MCP23S17Conf_t *conf);
+void MCP23S17_Init(MCP23S17_t *obj);
 
 /**
  * @brief Active l'adressage matériel du MCP23S17.
- * @param conf Pointeur vers la configuration du module
+ * @param obj Pointeur vers la configuration du module
  */
-void MCP23S17_EnableHWAddress(MCP23S17Conf_t *conf);
-
-/**
- * @brief Configure le registre de contrôle du module (IOCON).
- * @param conf Pointeur vers la configuration du module
- */
-void MCP23S17_ConfigureControl(MCP23S17Conf_t *conf);
-
-/**
- * @brief Active ou désactive les résistances de pull-up internes.
- * @param conf Pointeur vers la configuration du module
- */
-void MCP23S17_ConfigurePullupRes(MCP23S17Conf_t *conf);
-
-/**
- * @brief Configure la direction des broches du MCP23S17.
- * @param conf Pointeur vers la configuration du module
- */
-void MCP23S17_ConfigureDirection(MCP23S17Conf_t *conf);
-
-/**
- * @brief Active les interruptions sur les broches définies.
- * @param conf Pointeur vers la configuration du module
- */
-void MCP23S17_ConfigureINTEnabled(MCP23S17Conf_t *conf);
-
-/**
- * @brief Définit la valeur de référence pour les interruptions.
- * @param conf Pointeur vers la configuration du module
- */
-void MCP23S17_ConfigureINTDefault(MCP23S17Conf_t *conf);
-
-/**
- * @brief Configure la méthode de déclenchement des interruptions.
- * @param conf Pointeur vers la configuration du module
- */
-void MCP23S17_ConfigureINTControl(MCP23S17Conf_t *conf);
+void MCP23S17_EnableHWAddress(MCP23S17_t *obj);
 
 /* ==== Fonctions d'écriture ==== */
 
@@ -158,79 +268,71 @@ void MCP23S17_ConfigureINTControl(MCP23S17Conf_t *conf);
  * @param reg Registrer à écrire
  * @param value Données à écrire
  */
-void MCP23S17_WriteRegister(SPIConfiguration_t *spi, unsigned char reg, unsigned int value);
+void MCP23S17_WriteRegister(SPI_t *spi, unsigned char reg, unsigned int value);
 
 /**
  * @brief Configure la direction des broches d'un port.
  * @param spi Pointeur vers la configuration SPI
  * @param value Données à écrire
  */
-void MCP23S17_WriteDirectionReg(SPIConfiguration_t *spi, unsigned int value);
+void MCP23S17_WriteDirectionReg(SPI_t *spi, unsigned int value);
 
 /**
  * @brief Active ou désactive les interruptions pour un port.
  * @param spi Pointeur vers la configuration SPI
  * @param value Données à écrire
  */
-void MCP23S17_WriteINTEnableReg(SPIConfiguration_t *spi, unsigned int value);
+void MCP23S17_WriteINTEnableReg(SPI_t *spi, unsigned int value);
 
 /**
  * @brief Définit les valeurs de comparaison des interruptions.
  * @param spi Pointeur vers la configuration SPI
  * @param value Données à écrire
  */
-void MCP23S17_WriteINTDefaultReg(SPIConfiguration_t *spi, unsigned int value);
+void MCP23S17_WriteINTDefaultReg(SPI_t *spi, unsigned int value);
 
 /**
  * @brief Configure la façon dont les interruptions sont déclenchées.
  * @param spi Pointeur vers la configuration SPI
  * @param value Données à écrire
  */
-void MCP23S17_WriteINTControlReg(SPIConfiguration_t *spi, unsigned int value);
+void MCP23S17_WriteINTControlReg(SPI_t *spi, unsigned int value);
 
 /**
  * @brief Configure les options du registre de contrôle I/O.
  * @param spi Pointeur vers la configuration SPI
  * @param value Données à écrire
  */
-void MCP23S17_WriteIOControlReg(SPIConfiguration_t *spi, unsigned int value);
+void MCP23S17_WriteIOControlReg(SPI_t *spi, unsigned int value);
 
 /**
  * @brief Configure les résistances de pull-up pour un port.
  * @param spi Pointeur vers la configuration SPI
  * @param value Données à écrire
  */
-void MCP23S17_WritePullupResReg(SPIConfiguration_t *spi, unsigned int value);
+void MCP23S17_WritePullupResReg(SPI_t *spi, unsigned int value);
 
 /**
  * @brief Écrit une valeur sur l'ensemble des ports du MCP23S17.
  * @param spi Pointeur vers la configuration SPI
  * @param mask Données à écrire
  */
-void MCP23S17_WritePorts(SPIConfiguration_t *spi, unsigned int mask);
+void MCP23S17_WritePorts(SPI_t *spi, unsigned int mask);
 
 /**
  * @brief Écrit une valeur sur une broche spécifique du MCP23S17.
- * @param spi Pointeur vers la configuration SPI
+ * @param obj Pointeur vers la configuration du module
  * @param pin Numéro de la broche (0 à 15)
  * @param value Valeur à écrire (0 ou 1)
  */
-void MCP23S17_WritePin(SPIConfiguration_t *spi, unsigned char pin, unsigned char value);
+void MCP23S17_UpdatePin(MCP23S17_t *obj, unsigned char pin, unsigned char value);
 
 /**
  * @brief Met à jour l'état des ports en fonction d'un masque binaire.
- * @param conf Pointeur vers la configuration du module
+ * @param obj Pointeur vers la configuration du module
  * @param mask Masque binaire des ports à mettre à jour
  */
-void MCP23S17_UpdatePorts(MCP23S17Conf_t *conf, unsigned int mask);
-
-/**
- * @brief Met à jour l'état d'une broche spécifique.
- * @param conf Pointeur vers la configuration du module
- * @param pin Numéro de la broche (0 à 15)
- * @param state Nouvel état de la broche (0 ou 1)
- */
-void MCP23S17_UpdatePin(MCP23S17Conf_t *conf, unsigned int pin, unsigned char state);
+void MCP23S17_UpdatePorts(MCP23S17_t *obj, unsigned int mask);
 
 /* ==== Fonctions de lecture ==== */
 
@@ -240,70 +342,70 @@ void MCP23S17_UpdatePin(MCP23S17Conf_t *conf, unsigned int pin, unsigned char st
  * @param reg Registre à lire
  * @return unsigned int Données lues
  */
-unsigned int MCP23S17_ReadRegister(SPIConfiguration_t *spi, unsigned char reg);
+unsigned int MCP23S17_ReadRegister(SPI_t *spi, unsigned char reg);
 
 /**
  * @brief Lit la direction des broches d'un port.
  * @param spi Pointeur vers la configuration SPI
- * @return unsigned char Valeur du registre sur le port désiré
+ * @return unsigned int Valeur du registre sur le port désiré
  */
-unsigned int MCP23S17_ReadDirectionReg(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadDirectionReg(SPI_t *spi);
 
 /**
  * @brief Lit le flag d'activation des interruptions du port
  * @param spi Pointeur vers la configuration SPI
  * @return unsigned char Valeur du registre sur le port désiré
  */
-unsigned int MCP23S17_ReadINTEnableReg(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadINTEnableReg(SPI_t *spi);
 
 /**
  * @brief Lit les valeurs de comparaison des interruptions.
  * @param spi Pointeur vers la configuration SPI
  * @return unsigned char Valeur du registre sur le port désiré
  */
-unsigned int MCP23S17_ReadINTDefaultReg(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadINTDefaultReg(SPI_t *spi);
 
 /**
  * @brief Lit la façon dont les interruptions sont déclenchées.
  * @param spi Pointeur vers la configuration SPI
  * @return unsigned char Valeur du registre sur le port désiré
  */
-unsigned int MCP23S17_ReadINTControlReg(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadINTControlReg(SPI_t *spi);
 
 /**
  * @brief Lit les options du registre de contrôle I/O.
  * @param spi Pointeur vers la configuration SPI
  * @return unsigned char Valeur du registre sur le port désiré
  */
-unsigned int MCP23S17_ReadIOControlReg(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadIOControlReg(SPI_t *spi);
 
 /**
  * @brief Lit les résistances de pull-up pour un port.
  * @param spi Pointeur vers la configuration SPI
  * @return unsigned char Valeur du registre sur le port désiré
  */
-unsigned int MCP23S17_ReadPullupResReg(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadPullupResReg(SPI_t *spi);
 
 /**
  * @brief Lit les broches ayant déclenché une interruption.
  * @param spi Pointeur vers la configuration SPI
  * @return Masque binaire des broches ayant déclenché une interruption
  */
-unsigned int MCP23S17_ReadINTTriggered(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadINTTriggered(SPI_t *spi);
 
 /**
  * @brief Capture l'état des broches lors d'une interruption.
  * @param spi Pointeur vers la configuration SPI
  * @return Valeur capturée des ports
  */
-unsigned int MCP23S17_ReadINTCapture(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadINTCapture(SPI_t *spi);
 
 /**
  * @brief Lit l'état actuel des broches du MCP23S17.
  * @param spi Pointeur vers la configuration SPI
  * @return Masque binaire des états des broches
  */
-unsigned int MCP23S17_ReadPorts(SPIConfiguration_t *spi);
+unsigned int MCP23S17_ReadPorts(SPI_t *spi);
 
 /**
  * @brief Lit l'état d'une broche spécifique.
@@ -311,24 +413,16 @@ unsigned int MCP23S17_ReadPorts(SPIConfiguration_t *spi);
  * @param pin Numéro de la broche (0 à 15)
  * @return État de la broche (0 ou 1)
  */
-unsigned char MCP23S17_ReadPin(SPIConfiguration_t *spi, unsigned char pin);
+unsigned char MCP23S17_ReadPin(SPI_t *spi, unsigned char pin);
 
 /**
  * @brief Lit les états des ports de plusieurs modules MCP23S17.
- * @param conf Tableau contenant les configurations des modules
+ * @param obj Tableau contenant les configurations des modules
  * @param size Nombre de modules à lire
  */
-void MCP23S17_ReadPortsAllModules(MCP23S17Conf_t* conf, unsigned char size);
+void MCP23S17_ReadPortsAllModules(MCP23S17_t* obj, unsigned char size);
 
 /* ==== Fonctions de calcul ==== */
-
-/**
- * @brief Calcule le masque du port à écrire
- * @param port Valeur actuelle du port
- * @param pin Index du pin à écrire
- * @param state Valeur à écrire sur le pin
- */
-void MCP23S17_CalculateMask(unsigned int *port, unsigned int pin, unsigned char state);
 
 /**
  * @brief Calcule l'index du module
