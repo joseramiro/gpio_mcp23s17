@@ -14,8 +14,7 @@
 /** @brief Nombre total de broches du MCP23S17 */
 #define MCP23S17_NUM_PINS           16
 
-/** @defgroup MCP23S17_IODirMask
- *  @brief Masques pour registre IODIR du MCP23S17
+/** @defgroup MCP23S17_IODirMask Masques pour registre IODIR du MCP23S17
  * @{ */
 /** @brief Masque de configuration pour pins d'entrée */
 #define MCP23S17_IODIR_INPUT        0xFF
@@ -24,7 +23,6 @@
 /** @} */
 
 /** @defgroup MCP23S17_Registers Registres du MCP23S17
- *  @brief Liste de registres du MCP23S17
  *  @{ */
 /** @brief Contrôle la direction des E/S du port A  */
 #define MCP23S17_REG_IODIR_A        0x00
