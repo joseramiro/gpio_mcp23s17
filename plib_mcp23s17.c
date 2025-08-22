@@ -2,10 +2,11 @@
  * @file plib_mcp23s17.c
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0
+ * @version 1.0.1
  * @date 2025-03-18
  */
 
+#include <stddef.h>
 #include "plib_mcp23s17_spi.h"
 #include "plib_mcp23s17.h"
 #include "libs/common_c_libs/plib_data_struct.h"
@@ -14,12 +15,18 @@
 
 void MCP23S17_StartTranmission(SPI_t *spi)
 {
-   spi->cs.clear();
+    if(spi->en.clear != NULL)
+        spi->en.clear();
+    if(spi->cs.clear != NULL) 
+        spi->cs.clear();
 }
  
 void MCP23S17_EndTranmission(SPI_t *spi)
 {
-   spi->cs.set();
+    if(spi->cs.set != NULL)
+        spi->cs.set();
+    if(spi->en.set != NULL)
+        spi->en.set();
 }
 
 /* ==== Fonctions de configuration ==== */

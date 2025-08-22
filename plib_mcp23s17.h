@@ -5,7 +5,7 @@
  * @file plib_mcp23s17.h
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0
+ * @version 1.0.1
  * @date 2025-03-18
  */
 
