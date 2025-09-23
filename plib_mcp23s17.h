@@ -67,7 +67,7 @@
 /** @brief Verrouillage de sortie pour le port A */
 #define MCP23S17_REG_OLAT_A         0x14
 /** @brief Verrouillage de sortie pour le port B */
-#define MCP23S17_REG_OLAT_B         0x1
+#define MCP23S17_REG_OLAT_B         0x15
 /** @} */
 
 /** 

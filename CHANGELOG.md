@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2025-09-23
+- Fixed bug in REG_OLAT_B value
+
 ## [1.0.1] - 2025-08-22
 - Added NULL check of cs functions
 
