@@ -5,7 +5,7 @@
  * @file plib_mcp23s17_spi.h
  * @brief Bibliothèque SPI pour le module MCP23S17
  * @author Ramiro Najera
- * @version 1.0.1
+ * @version 1.0.3
  * @date 2025-04-23
  * @copyright Copyright (c) 2025
  */
