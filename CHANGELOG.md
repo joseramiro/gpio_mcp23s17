@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4] - 2025-09-26
+- Changed error code in init function (now 1 for all errors)
+- Deleted unused enum concerning direction
+
 ## [1.0.3] - 2025-09-25
 - Simplified write/read registers functions to generic Single and Double functions
 - Added Check functions for write/read registers functions

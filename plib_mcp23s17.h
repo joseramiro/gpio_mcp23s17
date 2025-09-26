@@ -5,7 +5,7 @@
  * @file plib_mcp23s17.h
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.3
+ * @version 1.0.4
  * @date 2025-03-18
  */
 
@@ -50,16 +50,6 @@ typedef enum
     MCP23S17_REG_OLAT_A, /**< Verrouillage de sortie pour le port A  */
     MCP23S17_REG_OLAT_B, /**< Verrouillage de sortie pour le port B  */
 }MCP23S17Reg_t;
-
-/** 
- * @enum MCP23S17IODIR_t
- * @brief Modes de direction des broches 
- */
-typedef enum
-{
-    MCP23S17_IODIR_OUT,  /**< Mode sortie */
-    MCP23S17_IODIR_IN    /**< Mode entrée */
-}MCP23S17IODIR_t;
 
 /**
  * @enum MCP23S17IOCONBank_t
@@ -230,6 +220,7 @@ void MCP23S17_EndTranmission(SPI_t *spi);
 /**
  * @brief Initialise le module MCP23S17 avec la configuration fournie.
  * @param obj Pointeur vers la configuration du module
+ * @return unsigned char 0 ok, 1 erreur
  */
 unsigned char MCP23S17_Init(MCP23S17_t *obj);
 

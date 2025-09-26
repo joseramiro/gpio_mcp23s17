@@ -2,7 +2,7 @@
  * @file plib_mcp23s17.c
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.3
+ * @version 1.0.4
  * @date 2025-03-18
  */
 
@@ -35,20 +35,19 @@ void MCP23S17_EndTranmission(SPI_t *spi)
 
 unsigned char MCP23S17_Init(MCP23S17_t *obj)
 {
-    unsigned char error = 0;
     // Reset CS
     MCP23S17_EndTranmission(&obj->spi);
     // Set init configuration (conf, pullup, direction, interrupt)
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A,   CONCAT(obj->confB.reg, obj->confA.reg))) error |= (1 << 0);
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPPU_A,    CONCAT(obj->dirB.reg, obj->dirA.reg)))   error |= (1 << 1);
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IODIR_A,   CONCAT(obj->dirB.reg, obj->dirA.reg)))   error |= (1 << 2);
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_DEFVAL_A,  0x00))                                   error |= (1 << 3);
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_INTCON_A,  0x00))                                   error |= (1 << 4);
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPINTEN_A, CONCAT(obj->dirB.reg, obj->dirA.reg)))   error |= (1 << 5);
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A,   CONCAT(obj->confB.reg, obj->confA.reg))) return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPPU_A,    CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IODIR_A,   CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_DEFVAL_A,  0x00))                                   return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_INTCON_A,  0x00))                                   return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPINTEN_A, CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
     // Read ports to process INT trigger and update ports
     MCP23S17_ReadDoubleRegister(&obj->spi, MCP23S17_REG_GPIO_A);
     MCP23S17_WriteDoubleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->ports);
-    return error;
+    return 0;
 }
 
 void MCP23S17_EnableHWAddress(MCP23S17_t *obj)
