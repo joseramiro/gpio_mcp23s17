@@ -5,7 +5,7 @@
  * @file plib_mcp23s17.h
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.4
+ * @version 1.0.5
  * @date 2025-03-18
  */
 
@@ -282,12 +282,12 @@ unsigned char MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, u
 
 /**
  * @brief Écrit une valeur sur une broche spécifique du MCP23S17.
- * @param obj Pointeur vers la configuration du module
+ * @param spi Pointeur vers la configuration SPI
  * @param pin Numéro de la broche (0 à 15)
  * @param value Valeur à écrire (0 ou 1)
  * @return unsigned char 0 pas d'erreur, sinon erreur
  */
-unsigned char MCP23S17_WriteCheckPin(MCP23S17_t *obj, unsigned char pin, unsigned char value);
+unsigned char MCP23S17_WriteCheckPin(SPI_t *spi, unsigned char pin, unsigned char value);
 
 /**
  * @brief Lit l'état d'une broche spécifique.

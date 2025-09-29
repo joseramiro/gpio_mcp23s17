@@ -2,7 +2,7 @@
  * @file plib_mcp23s17.c
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.4
+ * @version 1.0.5
  * @date 2025-03-18
  */
 
@@ -106,17 +106,17 @@ unsigned char MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, u
 
 /* ==== Fonctions d'écriture ==== */
 
-unsigned char MCP23S17_WriteCheckPin(MCP23S17_t *obj, unsigned char pin, unsigned char value)
+unsigned char MCP23S17_WriteCheckPin(SPI_t *spi, unsigned char pin, unsigned char value)
 {
     unsigned char reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
-    unsigned char port = MCP23S17_ReadSingleRegister(&obj->spi, reg);
+    unsigned char port = MCP23S17_ReadSingleRegister(spi, reg);
 
     if (value == 0)
         CLEAR_FLAG_BIT(port, (pin % 8));
     else
         SET_FLAG_BIT(port, (pin % 8));
 
-    return MCP23S17_WriteCheckSingleRegister(&obj->spi, reg, port);
+    return MCP23S17_WriteCheckSingleRegister(spi, reg, port);
 }
 
 unsigned char MCP23S17_ReadPin(SPI_t *spi, unsigned char pin)

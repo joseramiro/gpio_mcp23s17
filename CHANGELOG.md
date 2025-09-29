@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2025-09-29
+- Modified WriteCheckPin using only spi instead of object
+
 ## [1.0.4] - 2025-09-26
 - Changed error code in init function (now 1 for all errors)
 - Deleted unused enum concerning direction
