@@ -5,7 +5,7 @@
  * @file plib_mcp23s17.h
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.5
+ * @version 1.0.6
  * @date 2025-03-18
  */
 
@@ -222,7 +222,15 @@ void MCP23S17_EndTranmission(SPI_t *spi);
  * @param obj Pointeur vers la configuration du module
  * @return unsigned char 0 ok, 1 erreur
  */
-unsigned char MCP23S17_Init(MCP23S17_t *obj);
+unsigned char MCP23S17_InitChip(MCP23S17_t *obj);
+
+/**
+ * @brief Initialise une liste de modules MCP23S17
+ * @param objList Liste de modules MCP23S17
+ * @param size Taille de liste
+ * @return unsigned char Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
+ */
+unsigned char MCP23S17_InitList(MCP23S17_t *objList, unsigned char size);
 
 /**
  * @brief Active l'adressage matériel du MCP23S17.
