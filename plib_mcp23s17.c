@@ -2,7 +2,7 @@
  * @file plib_mcp23s17.c
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.6
+ * @version 1.0.7
  * @date 2025-03-18
  */
 
@@ -35,8 +35,8 @@ void MCP23S17_EndTranmission(SPI_t *spi)
 
 unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
 {
-    // Reset CS
-    MCP23S17_EndTranmission(&obj->spi);
+    // Attach Write and Read SPI functions according to SPI channel
+    MCP23S17_AttachFunctions(&obj->spi);
     // Set init configuration (conf, pullup, direction, interrupt)
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A,   CONCAT(obj->confB.reg, obj->confA.reg))) return 1;
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPPU_A,    CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
@@ -52,15 +52,7 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
 
 unsigned char MCP23S17_InitList(MCP23S17_t *objList, unsigned char size)
 {
-    unsigned char error = 0;
-    // Stop SPI tranmission
-    for(unsigned char i = 0; i < size; i++)
-        MCP23S17_EndTranmission(&objList[i].spi);
-
-    // Enable use of Hardware pins
-    for(unsigned char i = 0; i < size; i++) 
-        MCP23S17_EnableHWAddress(&objList[i]);
-    
+    unsigned char error = 0;    
     // Init each MCP23S17 module
     for(unsigned char i = 0; i < size; i++)
     {
