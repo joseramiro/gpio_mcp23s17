@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2025-10-03
+- Renamed EN and CS pins
+
 ## [1.0.7] - 2025-10-02
 - Added AttachFunctions to set Write and Read functions according to selected channel
 

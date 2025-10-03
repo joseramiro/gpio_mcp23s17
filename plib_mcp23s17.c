@@ -2,7 +2,7 @@
  * @file plib_mcp23s17.c
  * @brief Pilote pour le MCP23S17 (Expander I/O SPI)
  * @author Ramiro Najera
- * @version 1.0.7
+ * @version 1.0.8
  * @date 2025-03-18
  */
 
@@ -16,19 +16,19 @@
 void MCP23S17_StartTranmission(SPI_t *spi)
 {
     // Check function before  calling it
-    if(spi->en.clear != NULL)
-        spi->en.clear();
-    if(spi->cs.clear != NULL) 
-        spi->cs.clear();
+    if(spi->pinEN.Clear != NULL)
+        spi->pinEN.Clear();
+    if(spi->pinCS.Clear != NULL) 
+        spi->pinCS.Clear();
 }
  
 void MCP23S17_EndTranmission(SPI_t *spi)
 {
     // Check function before calling it
-    if(spi->cs.set != NULL)
-        spi->cs.set();
-    if(spi->en.set != NULL)
-        spi->en.set();
+    if(spi->pinCS.Set != NULL)
+        spi->pinCS.Set();
+    if(spi->pinEN.Set != NULL)
+        spi->pinEN.Set();
 }
 
 /* ==== Fonctions de base ==== */
