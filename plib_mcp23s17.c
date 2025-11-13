@@ -50,16 +50,20 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
     return 0;
 }
 
-unsigned char MCP23S17_InitList(MCP23S17_t *objList, unsigned char size)
+unsigned int MCP23S17_InitList(MCP23S17_t *objList, unsigned char size)
 {
-    unsigned char error = 0;    
+    unsigned int errorCode = 0;
+    // Check max size: return error code
+    if(size > 16)
+        return 0xFF;
     // Init each MCP23S17 module
     for(unsigned char i = 0; i < size; i++)
     {
         if(MCP23S17_InitChip(&objList[i]))
-            SET_FLAG_BIT(error, i);
+            SET_FLAG_BIT(errorCode, i);
     }
-    return error;
+    // Return error code
+    return errorCode;
 }
 
 void MCP23S17_EnableHWAddress(MCP23S17_t *obj)

@@ -225,12 +225,12 @@ void MCP23S17_EndTranmission(SPI_t *spi);
 unsigned char MCP23S17_InitChip(MCP23S17_t *obj);
 
 /**
- * @brief Initialise une liste de modules MCP23S17
+ * @brief Initialise une liste de modules MCP23S17 (taille max 16)
  * @param objList Liste de modules MCP23S17
  * @param size Taille de liste
- * @return unsigned char Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
+ * @return unsigned int Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
  */
-unsigned char MCP23S17_InitList(MCP23S17_t *objList, unsigned char size);
+unsigned int MCP23S17_InitList(MCP23S17_t *objList, unsigned char size);
 
 /**
  * @brief Active l'adressage matériel du MCP23S17.
