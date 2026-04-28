@@ -187,8 +187,10 @@ typedef struct
 {
     /** @brief Identifiant du module */
     unsigned char id;
-    /** @brief Valeur des ports */
-    unsigned int ports;
+    /** @brief Valeur du port A */
+    unsigned char portA;
+    /** @brief Valeur du port B */
+    unsigned char portB;
     /** @brief Registre IODIR du port A */
     MCP23S17IODirReg_t dirA;
     /** @brief Registre IODIR du port B */

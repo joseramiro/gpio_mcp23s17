@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.9] - 2026-04-28
+- Modified MCP23S17 struct to split ports into PortA and PortB
+
 ## [1.0.8] - 2025-10-03
 - Renamed EN and CS pins
 

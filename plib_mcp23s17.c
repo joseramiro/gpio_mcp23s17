@@ -45,8 +45,9 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_INTCON_A,  0x00))                                   return 1;
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPINTEN_A, CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
     // Read ports to process INT trigger and update ports
-    MCP23S17_ReadDoubleRegister(&obj->spi, MCP23S17_REG_GPIO_A);
-    MCP23S17_WriteDoubleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->ports);
+    MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->portA);
+    MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_B, obj->portB);
+    // No errors
     return 0;
 }
 
@@ -140,6 +141,7 @@ unsigned char MCP23S17_ReadPin(SPI_t *spi, unsigned char pin)
 
 void MCP23S17_AcknowledgeInterrupt(MCP23S17_t *obj, unsigned char size)
 {
+    /*
     // Read ports from all MCP23S17 modules
     for(unsigned char i = 0; i < size; i++)
     {
@@ -147,4 +149,5 @@ void MCP23S17_AcknowledgeInterrupt(MCP23S17_t *obj, unsigned char size)
         MCP23S17_ReadDoubleRegister(&obj[i].spi, MCP23S17_REG_INTF_A);
         MCP23S17_ReadDoubleRegister(&obj[i].spi, MCP23S17_REG_INTCAP_A);
     }
+    */
 }
