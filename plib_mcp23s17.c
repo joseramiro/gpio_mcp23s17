@@ -38,15 +38,17 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
     // Attach Write and Read SPI functions according to SPI channel
     MCP23S17_AttachFunctions(&obj->spi);
     // Set init configuration (conf, pullup, direction, interrupt)
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A,   CONCAT(obj->confB.reg, obj->confA.reg))) return 1;
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPPU_A,    CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IODIR_A,   CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_DEFVAL_A,  0x00))                                   return 1;
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_INTCON_A,  0x00))                                   return 1;
-    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPINTEN_A, CONCAT(obj->dirB.reg, obj->dirA.reg)))   return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A,   CONCAT(obj->confB.reg, obj->confA.reg)))        return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPPU_A,    CONCAT(obj->gppuB.reg, obj->gppuA.reg)))        return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IODIR_A,   CONCAT(obj->dirB.reg, obj->dirA.reg)))          return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_DEFVAL_A,  0x00))                                          return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_INTCON_A,  0x00))                                          return 1;
+    if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPINTEN_A, CONCAT(obj->gpintenB.reg, obj->gpintenA.reg)))  return 1;
     // Read ports to process INT trigger and update ports
-    MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->portA);
-    MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_B, obj->portB);
+    if(obj->dirA.reg == MCP23S17_PORT_OUTPUT_MODE)
+        MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->portA);
+    if(obj->dirB.reg == MCP23S17_PORT_OUTPUT_MODE)
+        MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_B, obj->portB);
     // No errors
     return 0;
 }

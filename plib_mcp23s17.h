@@ -17,9 +17,9 @@
 /** @defgroup MCP23S17_IODirMask Masques pour registre IODIR du MCP23S17
  * @{ */
 /** @brief Masque de configuration pour pins d'entrée */
-#define MCP23S17_IODIR_INPUT        0xFF
+#define MCP23S17_PORT_INPUT_MODE        0xFF
 /** @brief Masque de configuration pour pins d'sortie */
-#define MCP23S17_IODIR_OUTPUT       0x00
+#define MCP23S17_PORT_OUTPUT_MODE       0x00
 /** @} */
 
 #define MCP23S17_GET_MODULE_ID(pin)   ((unsigned int)((pin) / MCP23S17_NUM_PINS))
@@ -122,7 +122,7 @@ typedef enum
 } MCP23S7IOCONIntpol_t;
 
 /**
- * @union MCP23S17IODirReg_t
+ * @union MCP23S17IOReg_t
  * @brief Registre de direction des broches (IODIR) du MCP23S17
  */
 typedef union
@@ -148,7 +148,7 @@ typedef union
     } bits;
     /** @brief Accès complet au registre sous forme d'un octet. */
     unsigned char reg; /**< Accès complet au registre sous forme d'un octet. */
-} MCP23S17IODirReg_t;
+} MCP23S17IOReg_t;
 
 /**
  * @union MCP23S17IOCONReg_t
@@ -192,13 +192,21 @@ typedef struct
     /** @brief Valeur du port B */
     unsigned char portB;
     /** @brief Registre IODIR du port A */
-    MCP23S17IODirReg_t dirA;
+    MCP23S17IOReg_t dirA;
     /** @brief Registre IODIR du port B */
-    MCP23S17IODirReg_t dirB;
+    MCP23S17IOReg_t dirB;
     /** @brief Registre IOCON du port A */
     MCP23S17IOCONReg_t confA;
     /** @brief Registre IOCON du port B */
     MCP23S17IOCONReg_t confB;
+    /** @brief Registre GPPU du port A */
+    MCP23S17IOReg_t gppuA;
+    /** @brief Registre GPPU du port B */
+    MCP23S17IOReg_t gppuB;
+    /** @brief Registre GPINTEN du port A */
+    MCP23S17IOReg_t gpintenA;
+    /** @brief Registre GPINTEN du port B */
+    MCP23S17IOReg_t gpintenB;
     /** @brief Configuration de communication série */
     SPI_t spi;
 }MCP23S17_t;
