@@ -46,9 +46,9 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPINTEN_A, CONCAT(obj->gpintenB.reg, obj->gpintenA.reg)))  return 1;
     // Read ports to process INT trigger and update ports
     if(obj->dirA.reg == MCP23S17_PORT_OUTPUT_MODE)
-        MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->portA);
+        MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_A, obj->initPortA);
     if(obj->dirB.reg == MCP23S17_PORT_OUTPUT_MODE)
-        MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_B, obj->portB);
+        MCP23S17_WriteCheckSingleRegister(&obj->spi, MCP23S17_REG_GPIO_B, obj->initPortB);
     // No errors
     return 0;
 }
