@@ -33,7 +33,7 @@ void MCP23S17_EndTranmission(SPI_t *spi)
 
 /* ==== Fonctions de base ==== */
 
-unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
+uint8_t MCP23S17_InitChip(MCP23S17_t *obj)
 {
     // Attach Write and Read SPI functions according to SPI channel
     MCP23S17_AttachFunctions(&obj->spi);
@@ -53,11 +53,11 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj)
     return 0;
 }
 
-unsigned char MCP23S17_InitList(MCP23S17_t *objList, unsigned char size)
+uint8_t MCP23S17_InitList(MCP23S17_t *objList, uint8_t size)
 {
-    unsigned char error = 0;    
+    uint8_t error = 0;    
     // Init each MCP23S17 module
-    for(unsigned char i = 0; i < size; i++)
+    for(uint8_t i = 0; i < size; i++)
     {
         if(MCP23S17_InitChip(&objList[i]))
             SET_FLAG_BIT(error, i);
@@ -73,7 +73,7 @@ void MCP23S17_EnableHWAddress(MCP23S17_t *obj)
     MCP23S17_WriteDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A, CONCAT(mask.bits.haen, mask.bits.haen));
 }
 
-void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned char value)
+void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value)
 {
     // Write single register
     MCP23S17_StartTranmission(spi);
@@ -81,38 +81,38 @@ void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned char v
     MCP23S17_EndTranmission(spi);
 }
 
-void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned int value)
+void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value)
 {
     // Write 2 registers from same family
     MCP23S17_WriteSingleRegister(spi, reg, value);
     MCP23S17_WriteSingleRegister(spi, reg + 1, (value >> 8));
 }
 
-unsigned char MCP23S17_ReadSingleRegister(SPI_t *spi, unsigned char reg)
+uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg)
 {
     // Read single register
     MCP23S17_StartTranmission(spi);
-    unsigned char data = MCP23S17_Read(spi, reg);
+    uint8_t data = MCP23S17_Read(spi, reg);
     MCP23S17_EndTranmission(spi);
     return data;
 }
 
-unsigned int MCP23S17_ReadDoubleRegister(SPI_t *spi, unsigned char reg)
+uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg)
 {
     // Read 2 registers from same family
-    unsigned char dataLow = MCP23S17_ReadSingleRegister(spi, reg);
-    unsigned char dataHigh = MCP23S17_ReadSingleRegister(spi, reg + 1);
+    uint8_t dataLow = MCP23S17_ReadSingleRegister(spi, reg);
+    uint8_t dataHigh = MCP23S17_ReadSingleRegister(spi, reg + 1);
     return CONCAT(dataHigh, dataLow);
 }
 
-unsigned char MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned char value)
+uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value)
 {
     // Write and check single register
     MCP23S17_WriteSingleRegister(spi, reg, value);
     return(value != MCP23S17_ReadSingleRegister(spi, reg));
 }
 
-unsigned char MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned int value)
+uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value)
 {
     // Write and check 2 registers from same family
     return(MCP23S17_WriteCheckSingleRegister(spi, reg, value)
@@ -121,10 +121,10 @@ unsigned char MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, u
 
 /* ==== Fonctions d'écriture ==== */
 
-unsigned char MCP23S17_WriteCheckPin(SPI_t *spi, unsigned char pin, unsigned char value)
+uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value)
 {
-    unsigned char reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
-    unsigned char port = MCP23S17_ReadSingleRegister(spi, reg);
+    uint8_t reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
+    uint8_t port = MCP23S17_ReadSingleRegister(spi, reg);
 
     if (value == 0)
         CLEAR_FLAG_BIT(port, (pin % 8));
@@ -134,22 +134,9 @@ unsigned char MCP23S17_WriteCheckPin(SPI_t *spi, unsigned char pin, unsigned cha
     return MCP23S17_WriteCheckSingleRegister(spi, reg, port);
 }
 
-unsigned char MCP23S17_ReadPin(SPI_t *spi, unsigned char pin)
+uint8_t MCP23S17_ReadPin(SPI_t *spi, uint8_t pin)
 {
-    unsigned char reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
-    unsigned char port = MCP23S17_ReadSingleRegister(spi, reg);
+    uint8_t reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
+    uint8_t port = MCP23S17_ReadSingleRegister(spi, reg);
     return (port >> (pin % 8)) & (0x01);
-}
-
-void MCP23S17_AcknowledgeInterrupt(MCP23S17_t *obj, unsigned char size)
-{
-    /*
-    // Read ports from all MCP23S17 modules
-    for(unsigned char i = 0; i < size; i++)
-    {
-        obj->ports = MCP23S17_ReadDoubleRegister(&obj[i].spi, MCP23S17_REG_GPIO_A);
-        MCP23S17_ReadDoubleRegister(&obj[i].spi, MCP23S17_REG_INTF_A);
-        MCP23S17_ReadDoubleRegister(&obj[i].spi, MCP23S17_REG_INTCAP_A);
-    }
-    */
 }

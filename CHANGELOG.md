@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.12] - 2026-04-30
+- Modified variable types to use stdint
+
 ## [1.0.11] - 2026-04-30
 - Renamed portA and portB members of MCP23S17 struct
 

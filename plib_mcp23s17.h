@@ -9,6 +9,8 @@
  * @date 2025-03-18
  */
 
+#include <stdint.h>
+
 #include "libs/common_c_libs/plib_comm_struct.h"
 
 /** @brief Nombre total de broches du MCP23S17 */
@@ -232,7 +234,7 @@ void MCP23S17_EndTranmission(SPI_t *spi);
  * @param obj Pointeur vers la configuration du module
  * @return unsigned char 0 ok, 1 erreur
  */
-unsigned char MCP23S17_InitChip(MCP23S17_t *obj);
+uint8_t MCP23S17_InitChip(MCP23S17_t *obj);
 
 /**
  * @brief Initialise une liste de modules MCP23S17
@@ -240,7 +242,7 @@ unsigned char MCP23S17_InitChip(MCP23S17_t *obj);
  * @param size Taille de liste
  * @return unsigned char Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
  */
-unsigned char MCP23S17_InitList(MCP23S17_t *objList, unsigned char size);
+uint8_t MCP23S17_InitList(MCP23S17_t *objList, uint8_t size);
 
 /**
  * @brief Active l'adressage matériel du MCP23S17.
@@ -254,7 +256,7 @@ void MCP23S17_EnableHWAddress(MCP23S17_t *obj);
  * @param reg Registrer à écrire
  * @param value Données à écrire
  */
-void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned char value);
+void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value);
 
 /**
  * @brief Ecrit un ensemble de 2 registres de la même famille
@@ -262,7 +264,7 @@ void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned char v
  * @param reg Registrer à écrire
  * @param value Données à écrire
  */
-void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned int value);
+void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value);
 
 /**
  * @brief Lit un registre
@@ -270,7 +272,7 @@ void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned int va
  * @param reg Registre à lire
  * @return unsigned char Données lues
  */
-unsigned char MCP23S17_ReadSingleRegister(SPI_t *spi, unsigned char reg);
+uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg);
 
 /**
  * @brief Lit un ensemble de 2 registres de la même famille
@@ -278,7 +280,7 @@ unsigned char MCP23S17_ReadSingleRegister(SPI_t *spi, unsigned char reg);
  * @param reg Registre à lire
  * @return unsigned int Données lues
  */
-unsigned int MCP23S17_ReadDoubleRegister(SPI_t *spi, unsigned char reg);
+uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg);
 
 /**
  * @brief Ecrit et vérifie la valeur d'un registre
@@ -287,7 +289,7 @@ unsigned int MCP23S17_ReadDoubleRegister(SPI_t *spi, unsigned char reg);
  * @param value Données à écrire
  * @return unsigned char 0 pas d'erreur, sinon erreur
  */
-unsigned char MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned char value);
+uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value);
 
 /**
  * @brief Ecrit et vérifie la valeur de 2 registres de la même famille
@@ -296,7 +298,7 @@ unsigned char MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, u
  * @param value Données à écrire
  * @return unsigned char 0 pas d'erreur, sinon erreur
  */
-unsigned char MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, unsigned int value);
+uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value);
 
 /**
  * @brief Écrit une valeur sur une broche spécifique du MCP23S17.
@@ -305,7 +307,7 @@ unsigned char MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, u
  * @param value Valeur à écrire (0 ou 1)
  * @return unsigned char 0 pas d'erreur, sinon erreur
  */
-unsigned char MCP23S17_WriteCheckPin(SPI_t *spi, unsigned char pin, unsigned char value);
+uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value);
 
 /**
  * @brief Lit l'état d'une broche spécifique.
@@ -313,14 +315,7 @@ unsigned char MCP23S17_WriteCheckPin(SPI_t *spi, unsigned char pin, unsigned cha
  * @param pin Numéro de la broche (0 à 15)
  * @return État de la broche (0 ou 1)
  */
-unsigned char MCP23S17_ReadPin(SPI_t *spi, unsigned char pin);
-
-/**
- * @brief Lit les états des ports de plusieurs modules MCP23S17.
- * @param obj Tableau contenant les configurations des modules
- * @param size Nombre de modules à lire
- */
-void MCP23S17_AcknowledgeInterrupt(MCP23S17_t* obj, unsigned char size);
+uint8_t MCP23S17_ReadPin(SPI_t *spi, uint8_t pin);
 
 /* ==== Fonctions de calcul ==== */
 

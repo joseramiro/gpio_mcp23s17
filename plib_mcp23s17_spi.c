@@ -25,9 +25,9 @@ void MCP23S17_AttachFunctions(SPI_t *spi)
     }
 }
 
-void MCP23S17_Write(SPI_t *spi, unsigned char reg, unsigned char val)
+void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val)
 {
-    unsigned char TXBuffer[3] = {(MCP23S17_ADDRESS) | (spi->address << 1), reg, val};
+    uint8_t TXBuffer[3] = {(MCP23S17_ADDRESS) | (spi->address << 1), reg, val};
 
     // Disable interrupts in critical part
     __builtin_disable_interrupts();
@@ -39,10 +39,10 @@ void MCP23S17_Write(SPI_t *spi, unsigned char reg, unsigned char val)
     __builtin_enable_interrupts();
 }
 
-unsigned char MCP23S17_Read(SPI_t *spi, unsigned char reg)
+uint8_t MCP23S17_Read(SPI_t *spi, uint8_t reg)
 {
-    unsigned char TXBuffer[2] = {((MCP23S17_ADDRESS) |(spi->address << 1) | 1), reg};
-    unsigned char RXBuffer[1];
+    uint8_t TXBuffer[2] = {((MCP23S17_ADDRESS) |(spi->address << 1) | 1), reg};
+    uint8_t RXBuffer[1];
 
     // Disable interrupts in critical part
     __builtin_disable_interrupts();

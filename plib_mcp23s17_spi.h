@@ -10,6 +10,8 @@
  * @copyright Copyright (c) 2025
  */
 
+#include <stdint.h>
+
 #include "libs/common_c_libs/plib_comm_struct.h"
 
 /** @brief Adresse SPI du MCP23S17 */
@@ -34,7 +36,7 @@ void MCP23S17_AttachFunctions(SPI_t *spi);
  * @param reg Registre cible
  * @param val Valeur à écrire
  */
-void MCP23S17_Write(SPI_t *spi, unsigned char reg, unsigned char val);
+void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val);
 
 /**
  * @brief Lit une valeur depuis un registre du MCP23S17.
@@ -42,6 +44,6 @@ void MCP23S17_Write(SPI_t *spi, unsigned char reg, unsigned char val);
  * @param reg Registre cible
  * @return Valeur lue
  */
-unsigned char MCP23S17_Read(SPI_t *spi, unsigned char reg);
+uint8_t MCP23S17_Read(SPI_t *spi, uint8_t reg);
 
 #endif  // PLIB_MCP23S17_SPI_H
