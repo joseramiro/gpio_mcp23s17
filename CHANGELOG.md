@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-06-16
+- Merged spi file into main file, modified variables types to use stdint.h types
+
 ## [1.0.12] - 2026-04-30
 - Modified variable types to use stdint
 

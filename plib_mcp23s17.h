@@ -13,6 +13,9 @@
 
 #include "libs/common_c_libs/plib_comm_struct.h"
 
+/** @brief Adresse SPI du MCP23S17 */
+#define MCP23S17_ADDRESS        0x40
+
 /** @brief Nombre total de broches du MCP23S17 */
 #define MCP23S17_NUM_PINS           16
 
@@ -24,8 +27,8 @@
 #define MCP23S17_PORT_OUTPUT_MODE       0x00
 /** @} */
 
-#define MCP23S17_GET_MODULE_ID(pin)   ((unsigned int)((pin) / MCP23S17_NUM_PINS))
-#define MCP23S17_GET_PIN_ID(pin)      ((unsigned int)((pin) % MCP23S17_NUM_PINS))
+#define MCP23S17_GET_MODULE_ID(pin)   ((uint16_t)((pin) / MCP23S17_NUM_PINS))
+#define MCP23S17_GET_PIN_ID(pin)      ((uint16_t)((pin) % MCP23S17_NUM_PINS))
 
 typedef enum
 {
@@ -132,24 +135,24 @@ typedef union
     /** @brief Accès individuel aux bits du registre. */
     struct {
         /** @brief Bit 0 */
-        unsigned char b0 : 1;
+        uint8_t b0 : 1;
         /** @brief Bit 1 */
-        unsigned char b1 : 1;
+        uint8_t b1 : 1;
         /** @brief Bit 2 */
-        unsigned char b2 : 1;
+        uint8_t b2 : 1;
         /** @brief Bit 3 */
-        unsigned char b3 : 1;
+        uint8_t b3 : 1;
         /** @brief Bit 4 */
-        unsigned char b4 : 1;
+        uint8_t b4 : 1;
         /** @brief Bit 5 */
-        unsigned char b5 : 1;
+        uint8_t b5 : 1;
         /** @brief Bit 6 */
-        unsigned char b6 : 1;
+        uint8_t b6 : 1;
         /** @brief Bit 7 */
-        unsigned char b7 : 1;
+        uint8_t b7 : 1;
     } bits;
     /** @brief Accès complet au registre sous forme d'un octet. */
-    unsigned char reg; /**< Accès complet au registre sous forme d'un octet. */
+    uint8_t reg; /**< Accès complet au registre sous forme d'un octet. */
 } MCP23S17IOReg_t;
 
 /**
@@ -161,24 +164,24 @@ typedef union
     /** @brief Accès individuel aux bits du registre. */
     struct {
         /** @brief Bit 0 (réservé)*/
-        unsigned char b0        : 1;
+        uint8_t b0        : 1;
         /** @brief Bit 1 polarité de sortie de la broche INT */
-        unsigned char intpol    : 1;
+        uint8_t intpol    : 1;
         /** @brief Bit 2 configuration open-drain de la broche INT */
-        unsigned char odr       : 1;
+        uint8_t odr       : 1;
         /** @brief Bit 3 addresse hardware */
-        unsigned char haen      : 1;
+        uint8_t haen      : 1;
         /** @brief Bit 4 configuration de slew rate (SDA output) */ 
-        unsigned char disslw    : 1;
+        uint8_t disslw    : 1;
         /** @brief Bit 5 configuration de mode séquentiel */
-        unsigned char seqop     : 1;
+        uint8_t seqop     : 1;
         /** @brief Bit 6 broches INT interconnectées */
-        unsigned char mirror    : 1;
+        uint8_t mirror    : 1;
         /** @brief Bit 7 Configuration des addresses des registres */
-        unsigned char bank      : 1;
+        uint8_t bank      : 1;
     } bits;
     /** @brief Accès complet au registre sous forme d'un octet. */
-    unsigned char reg; /**< Accès complet au registre sous forme d'un octet. */
+    uint8_t reg; /**< Accès complet au registre sous forme d'un octet. */
 } MCP23S17IOCONReg_t;
 
 /** 
@@ -188,11 +191,11 @@ typedef union
 typedef struct
 {
     /** @brief Identifiant du module */
-    unsigned char id;
+    uint8_t id;
     /** @brief Valeur du port A */
-    unsigned char initPortA;
+    uint8_t initPortA;
     /** @brief Valeur du port B */
-    unsigned char initPortB;
+    uint8_t initPortB;
     /** @brief Registre IODIR du port A */
     MCP23S17IOReg_t dirA;
     /** @brief Registre IODIR du port B */
@@ -215,24 +218,14 @@ typedef struct
 
 /* ==== Fonctions Chip Select ==== */
 
-/**
- * @brief Démarre une transmission SPI avec le MCP23S17.
- * @param spi Pointeur vers la configuration SPI
- */
-void MCP23S17_StartTranmission(SPI_t *spi);
 
-/**
- * @brief Termine une transmission SPI avec le MCP23S17.
- * @param spi Pointeur vers la configuration SPI
- */
-void MCP23S17_EndTranmission(SPI_t *spi);
 
 /* ==== Fonctions de base ==== */
 
 /**
  * @brief Initialise le module MCP23S17 avec la configuration fournie.
  * @param obj Pointeur vers la configuration du module
- * @return unsigned char 0 ok, 1 erreur
+ * @return uint8_t 0 ok, 1 erreur
  */
 uint8_t MCP23S17_InitChip(MCP23S17_t *obj);
 
@@ -240,7 +233,7 @@ uint8_t MCP23S17_InitChip(MCP23S17_t *obj);
  * @brief Initialise une liste de modules MCP23S17
  * @param objList Liste de modules MCP23S17
  * @param size Taille de liste
- * @return unsigned char Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
+ * @return uint8_t Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
  */
 uint8_t MCP23S17_InitList(MCP23S17_t *objList, uint8_t size);
 
@@ -270,7 +263,7 @@ void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value)
  * @brief Lit un registre
  * @param spi Pointeur vers la configuration SPI
  * @param reg Registre à lire
- * @return unsigned char Données lues
+ * @return uint8_t Données lues
  */
 uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg);
 
@@ -278,7 +271,7 @@ uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg);
  * @brief Lit un ensemble de 2 registres de la même famille
  * @param spi Pointeur vers la configuration SPI
  * @param reg Registre à lire
- * @return unsigned int Données lues
+ * @return uint16_t Données lues
  */
 uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg);
 
@@ -287,7 +280,7 @@ uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg);
  * @param spi Pointeur vers la configuration SPI
  * @param reg Registre à écrire
  * @param value Données à écrire
- * @return unsigned char 0 pas d'erreur, sinon erreur
+ * @return uint8_t 0 pas d'erreur, sinon erreur
  */
 uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value);
 
@@ -296,7 +289,7 @@ uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t
  * @param spi Pointeur vers la configuration SPI
  * @param reg Registre à écrire
  * @param value Données à écrire
- * @return unsigned char 0 pas d'erreur, sinon erreur
+ * @return uint8_t 0 pas d'erreur, sinon erreur
  */
 uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value);
 
@@ -305,7 +298,7 @@ uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_
  * @param spi Pointeur vers la configuration SPI
  * @param pin Numéro de la broche (0 à 15)
  * @param value Valeur à écrire (0 ou 1)
- * @return unsigned char 0 pas d'erreur, sinon erreur
+ * @return uint8_t 0 pas d'erreur, sinon erreur
  */
 uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value);
 

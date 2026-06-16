@@ -6,37 +6,19 @@
  * @date 2025-03-18
  */
 
-#include <stddef.h>
-#include "plib_mcp23s17_spi.h"
+
 #include "plib_mcp23s17.h"
 #include "libs/common_c_libs/plib_data_struct.h"
 
-/* ==== Fonctions Chip Select ==== */
+// Static functions
+static void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val);
+static uint8_t MCP23S17_Read(SPI_t *spi, uint8_t reg);
+static void MCP23S17_StartTranmission(SPI_t *spi);
+static void MCP23S17_EndTranmission(SPI_t *spi);
 
-void MCP23S17_StartTranmission(SPI_t *spi)
-{
-    // Check function before  calling it
-    if(spi->pinEN.Clear != NULL)
-        spi->pinEN.Clear();
-    if(spi->pinCS.Clear != NULL) 
-        spi->pinCS.Clear();
-}
- 
-void MCP23S17_EndTranmission(SPI_t *spi)
-{
-    // Check function before calling it
-    if(spi->pinCS.Set != NULL)
-        spi->pinCS.Set();
-    if(spi->pinEN.Set != NULL)
-        spi->pinEN.Set();
-}
-
-/* ==== Fonctions de base ==== */
-
+// Public API
 uint8_t MCP23S17_InitChip(MCP23S17_t *obj)
 {
-    // Attach Write and Read SPI functions according to SPI channel
-    MCP23S17_AttachFunctions(&obj->spi);
     // Set init configuration (conf, pullup, direction, interrupt)
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A,   CONCAT(obj->confB.reg, obj->confA.reg)))        return 1;
     if(MCP23S17_WriteCheckDoubleRegister(&obj->spi, MCP23S17_REG_GPPU_A,    CONCAT(obj->gppuB.reg, obj->gppuA.reg)))        return 1;
@@ -139,4 +121,58 @@ uint8_t MCP23S17_ReadPin(SPI_t *spi, uint8_t pin)
     uint8_t reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
     uint8_t port = MCP23S17_ReadSingleRegister(spi, reg);
     return (port >> (pin % 8)) & (0x01);
+}
+
+// Static functions
+
+static void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val)
+{
+    uint8_t TXBuffer[3] = {(MCP23S17_ADDRESS) | (spi->address << 1), reg, val};
+
+    // Disable interrupts in critical part
+    __builtin_disable_interrupts();
+    
+    // Send buffer, return error code
+    if(spi->Write)
+        spi->Write(TXBuffer, 3);
+    
+    // Enable interrupts after critical part
+    __builtin_enable_interrupts();
+}
+
+static uint8_t MCP23S17_Read(SPI_t *spi, uint8_t reg)
+{
+    uint8_t TXBuffer[2] = {((MCP23S17_ADDRESS) |(spi->address << 1) | 1), reg};
+    uint8_t RXBuffer[1];
+
+    // Disable interrupts in critical part
+    __builtin_disable_interrupts();
+
+    // Send buffer and read data according to SPI channel
+    if(spi->Write)
+        spi->Write(TXBuffer, 2);
+    if(spi->Read)
+        spi->Read(RXBuffer, 1);
+
+    // Enable interrupts after critical part
+    __builtin_enable_interrupts();
+    return RXBuffer[0];
+}
+
+void MCP23S17_StartTranmission(SPI_t *spi)
+{
+    // Check function before  calling it
+    if(spi->pinEN.Clear)
+        spi->pinEN.Clear();
+    if(spi->pinCS.Clear) 
+        spi->pinCS.Clear();
+}
+ 
+void MCP23S17_EndTranmission(SPI_t *spi)
+{
+    // Check function before calling it
+    if(spi->pinCS.Set)
+        spi->pinCS.Set();
+    if(spi->pinEN.Set)
+        spi->pinEN.Set();
 }
