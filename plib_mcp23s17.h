@@ -235,7 +235,7 @@ uint8_t MCP23S17_InitChip(MCP23S17_t *obj);
  * @param size Taille de liste
  * @return uint8_t Code d'erreur (bitmap de modules de la liste. voir MCP23S17_InitChip)
  */
-uint8_t MCP23S17_InitList(MCP23S17_t *objList, uint8_t size);
+uint8_t MCP23S17_InitList(MCP23S17_t *objList, const uint8_t size);
 
 /**
  * @brief Active l'adressage matériel du MCP23S17.
@@ -249,7 +249,7 @@ void MCP23S17_EnableHWAddress(MCP23S17_t *obj);
  * @param reg Registrer à écrire
  * @param value Données à écrire
  */
-void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value);
+void MCP23S17_WriteSingleRegister(SPI_t *spi, const uint8_t reg, const uint8_t value);
 
 /**
  * @brief Ecrit un ensemble de 2 registres de la même famille
@@ -257,7 +257,7 @@ void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value);
  * @param reg Registrer à écrire
  * @param value Données à écrire
  */
-void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value);
+void MCP23S17_WriteDoubleRegister(SPI_t *spi, const uint8_t reg, const uint16_t value);
 
 /**
  * @brief Lit un registre
@@ -265,7 +265,7 @@ void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value)
  * @param reg Registre à lire
  * @return uint8_t Données lues
  */
-uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg);
+uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, const uint8_t reg);
 
 /**
  * @brief Lit un ensemble de 2 registres de la même famille
@@ -273,7 +273,7 @@ uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg);
  * @param reg Registre à lire
  * @return uint16_t Données lues
  */
-uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg);
+uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, const uint8_t reg);
 
 /**
  * @brief Ecrit et vérifie la valeur d'un registre
@@ -282,7 +282,7 @@ uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg);
  * @param value Données à écrire
  * @return uint8_t 0 pas d'erreur, sinon erreur
  */
-uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value);
+uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, const uint8_t reg, const uint8_t value);
 
 /**
  * @brief Ecrit et vérifie la valeur de 2 registres de la même famille
@@ -291,7 +291,7 @@ uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t
  * @param value Données à écrire
  * @return uint8_t 0 pas d'erreur, sinon erreur
  */
-uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value);
+uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, const uint8_t reg, const uint16_t value);
 
 /**
  * @brief Écrit une valeur sur une broche spécifique du MCP23S17.
@@ -300,7 +300,7 @@ uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_
  * @param value Valeur à écrire (0 ou 1)
  * @return uint8_t 0 pas d'erreur, sinon erreur
  */
-uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value);
+uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, const uint8_t pin, const uint8_t value);
 
 /**
  * @brief Lit l'état d'une broche spécifique.
@@ -308,7 +308,7 @@ uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value);
  * @param pin Numéro de la broche (0 à 15)
  * @return État de la broche (0 ou 1)
  */
-uint8_t MCP23S17_ReadPin(SPI_t *spi, uint8_t pin);
+uint8_t MCP23S17_ReadPin(SPI_t *spi, const uint8_t pin);
 
 /* ==== Fonctions de calcul ==== */
 

@@ -11,8 +11,8 @@
 #include "libs/common_c_libs/plib_data_struct.h"
 
 // Static functions
-static void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val);
-static uint8_t MCP23S17_Read(SPI_t *spi, uint8_t reg);
+static void MCP23S17_Write(SPI_t *spi, const uint8_t reg, const uint8_t val);
+static uint8_t MCP23S17_Read(SPI_t *spi, const uint8_t reg);
 static void MCP23S17_StartTranmission(SPI_t *spi);
 static void MCP23S17_EndTranmission(SPI_t *spi);
 
@@ -35,7 +35,7 @@ uint8_t MCP23S17_InitChip(MCP23S17_t *obj)
     return 0;
 }
 
-uint8_t MCP23S17_InitList(MCP23S17_t *objList, uint8_t size)
+uint8_t MCP23S17_InitList(MCP23S17_t *objList, const uint8_t size)
 {
     uint8_t error = 0;    
     // Init each MCP23S17 module
@@ -55,7 +55,7 @@ void MCP23S17_EnableHWAddress(MCP23S17_t *obj)
     MCP23S17_WriteDoubleRegister(&obj->spi, MCP23S17_REG_IOCON_A, CONCAT(mask.bits.haen, mask.bits.haen));
 }
 
-void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value)
+void MCP23S17_WriteSingleRegister(SPI_t *spi, const uint8_t reg, const uint8_t value)
 {
     // Write single register
     MCP23S17_StartTranmission(spi);
@@ -63,14 +63,14 @@ void MCP23S17_WriteSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value)
     MCP23S17_EndTranmission(spi);
 }
 
-void MCP23S17_WriteDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value)
+void MCP23S17_WriteDoubleRegister(SPI_t *spi, const uint8_t reg, const uint16_t value)
 {
     // Write 2 registers from same family
     MCP23S17_WriteSingleRegister(spi, reg, value);
     MCP23S17_WriteSingleRegister(spi, reg + 1, (value >> 8));
 }
 
-uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg)
+uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, const uint8_t reg)
 {
     // Read single register
     MCP23S17_StartTranmission(spi);
@@ -79,7 +79,7 @@ uint8_t MCP23S17_ReadSingleRegister(SPI_t *spi, uint8_t reg)
     return data;
 }
 
-uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg)
+uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, const uint8_t reg)
 {
     // Read 2 registers from same family
     uint8_t dataLow = MCP23S17_ReadSingleRegister(spi, reg);
@@ -87,14 +87,14 @@ uint16_t MCP23S17_ReadDoubleRegister(SPI_t *spi, uint8_t reg)
     return CONCAT(dataHigh, dataLow);
 }
 
-uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint8_t value)
+uint8_t MCP23S17_WriteCheckSingleRegister(SPI_t *spi, const uint8_t reg, const uint8_t value)
 {
     // Write and check single register
     MCP23S17_WriteSingleRegister(spi, reg, value);
     return(value != MCP23S17_ReadSingleRegister(spi, reg));
 }
 
-uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_t value)
+uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, const uint8_t reg, const uint16_t value)
 {
     // Write and check 2 registers from same family
     return(MCP23S17_WriteCheckSingleRegister(spi, reg, value)
@@ -103,7 +103,7 @@ uint8_t MCP23S17_WriteCheckDoubleRegister(SPI_t *spi, MCP23S17Reg_t reg, uint16_
 
 /* ==== Fonctions d'écriture ==== */
 
-uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value)
+uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, const uint8_t pin, const uint8_t value)
 {
     uint8_t reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
     uint8_t port = MCP23S17_ReadSingleRegister(spi, reg);
@@ -116,7 +116,7 @@ uint8_t MCP23S17_WriteCheckPin(SPI_t *spi, uint8_t pin, uint8_t value)
     return MCP23S17_WriteCheckSingleRegister(spi, reg, port);
 }
 
-uint8_t MCP23S17_ReadPin(SPI_t *spi, uint8_t pin)
+uint8_t MCP23S17_ReadPin(SPI_t *spi, const uint8_t pin)
 {
     uint8_t reg  = (pin < 8) ? MCP23S17_REG_GPIO_A : MCP23S17_REG_GPIO_B; // true PORTA, false PORTB
     uint8_t port = MCP23S17_ReadSingleRegister(spi, reg);
@@ -125,7 +125,7 @@ uint8_t MCP23S17_ReadPin(SPI_t *spi, uint8_t pin)
 
 // Static functions
 
-static void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val)
+static void MCP23S17_Write(SPI_t *spi, const uint8_t reg, const uint8_t val)
 {
     uint8_t TXBuffer[3] = {(MCP23S17_ADDRESS) | (spi->address << 1), reg, val};
 
@@ -140,7 +140,7 @@ static void MCP23S17_Write(SPI_t *spi, uint8_t reg, uint8_t val)
     __builtin_enable_interrupts();
 }
 
-static uint8_t MCP23S17_Read(SPI_t *spi, uint8_t reg)
+static uint8_t MCP23S17_Read(SPI_t *spi, const uint8_t reg)
 {
     uint8_t TXBuffer[2] = {((MCP23S17_ADDRESS) |(spi->address << 1) | 1), reg};
     uint8_t RXBuffer[1];
