@@ -8,7 +8,7 @@
 
 
 #include "plib_mcp23s17.h"
-#include "libs/common_c_libs/plib_data_struct.h"
+#include "libs/plib_data_struct/plib_data_struct.h"
 
 // Static functions
 static void MCP23S17_Write(SPI_t *spi, const uint8_t reg, const uint8_t val);
